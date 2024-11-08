@@ -1,0 +1,531 @@
+\documentclass[lang = zh]{iwork}
+\usepackage{mathrsfs}
+
+\setlist[enumerate]{label = (\arabic*)}
+\newcommand{\booktitle}{《数值分析基础 (第二版) (关治, 陆金甫)》}
+
+\course{Advanced Numerical Analysis (60420024-1)}
+\title{第三次}
+
+\begin{document}
+
+\maketitle
+
+\begin{prob}[\booktitle P282 4.]
+  用 Chebyshev 多项式 $T_3$ 的零点在 $[-1, 1]$ 上对函数 $f(x) = e^x$ 构造 2 次 Newton 插值多项式.
+\end{prob}
+\begin{sol}
+  \DeclareDocumentCommand{\CA}{}{\frac{\sqrt{3}}{2}}
+  \DeclareDocumentCommand{\CB}{}{\frac{2}{\sqrt{3}}}
+  \DeclareDocumentCommand{\f}{}{\trigbraces{f}}
+  为了使用 Chebyshev 多项式 $T_3$ 的零点在区间 $[-1, 1]$ 上对函数 $f(x) = e^x$ 构造 2 次 Newton 插值多项式, 我们首先需要找到 $T_3$ 的零点. Chebyshev 多项式 $T_3(x)$ 的零点为:
+  \begin{equation*}
+    x_k = \cos(\frac{(2k-1)\pi}{6}), \quad k = 1, 2, 3
+  \end{equation*}
+  计算这些零点:
+  \begin{equation*}
+    x_1 = \cos(\frac{\pi}{6}) = \CA   \qquad
+    x_2 = \cos(\frac{\pi}{2}) = 0     \qquad
+    x_3 = \cos(\frac{5\pi}{6}) = -\CA
+  \end{equation*}
+  因此, Chebyshev 多项式 $T_3$ 的零点为 $x_1 = \CA$, $x_2 = 0$, $x_3 = -\CA$.
+  接下来, 我们计算这些点处的函数值 $f(x) = e^x$:
+  \begin{equation*}
+    \f(\CA) = e^{\CA}   \qquad
+    \f(0) = e^0 = 1     \qquad
+    \f(-\CA) = e^{-\CA}
+  \end{equation*}
+  现在我们构造均差表:
+  \begin{equation*}
+    \begin{array}{c|ccc}
+      x_i  & f(x_i)   & \text{一阶均差}                                      & \text{二阶均差}                                                                                    \\
+      \hline
+      -\CA & e^{-\CA} & \frac{1 - e^{-\CA}}{0 - (-\CA)} = \CB (1 - e^{-\CA}) & \frac{\CB (e^{\CA} - 1) - \CB (1 - e^{-\CA})}{\CA - (-\CA)} = \frac{2}{3} (e^{\CA} - 2 + e^{-\CA}) \\
+      0    & 1        & \frac{e^{\CA} - 1}{\CA - 0} = \CB (e^{\CA} - 1)                                                                                                           \\
+      \CA  & e^{\CA}
+    \end{array}
+  \end{equation*}
+  根据均差表, 我们可以写出 Newton 插值多项式:
+  \begin{equation*}
+    P_2(x) = f(x_1) + f[x_1, x_2](x - x_1) + f[x_1, x_2, x_3](x - x_1)(x - x_2)
+  \end{equation*}
+  代入具体值:
+  \begin{equation*}
+    P_2(x) = e^{-\CA} + \CB (1 - e^{-\CA}) (x + \CA) + \frac{2}{3} (e^{\CA} - 2 + e^{-\CA}) (x + \CA) x
+  \end{equation*}
+  简化后得到:
+  \begin{equation*}
+    P_2(x) = e^{-\CA} + \frac{2}{\sqrt{3}} (1 - e^{-\CA}) (x + \CA) + \frac{2}{3} (e^{\CA} - 2 + e^{-\CA}) (x^2 + \CA x)
+  \end{equation*}
+  这就是我们构造的 2 次 Newton 插值多项式.
+\end{sol}
+
+\begin{prob}[\booktitle P282 7.]
+  设 $f(x) = e^x,\, x \in [-1, 1]$, 试求出 $f$ 在 $\mathscr{P}_1$ 和 $\mathscr{P}_2$ 中的最佳平方逼近多项式 $P_1^*$ 和 $P_2^*$.
+\end{prob}
+\begin{sol}
+  为了求解 $f(x) = e^x$ 在 $\mathscr{P}_1$ 和 $\mathscr{P}_2$ 中的最佳平方逼近多项式 $P_1^*$ 和 $P_2^*$, 我们需要分别在 $\mathscr{P}_1$ 和 $\mathscr{P}_2$ 中找到使得误差平方和最小的多项式.
+
+  \paragraph{在 $\mathscr{P}_1$ 中的最佳平方逼近多项式 $P_1^*$}
+  在 $\mathscr{P}_1$ 中, 多项式形式为 $P_1^*(x) = a_0 + a_1 x$.
+  我们需要最小化误差平方和:
+  \begin{equation*}
+    E = \int_{-1}^{1} [e^x - (a_0 + a_1 x)]^2 \dd{x}
+  \end{equation*}
+  通过最小化 $E$, 我们可以得到 $a_0$ 和 $a_1$ 的值.
+  首先, 计算内积:
+  \begin{equation*}
+    (1, 1) = \int_{-1}^{1} 1^2 \dd{x} = 2           \qquad
+    (x, x) = \int_{-1}^{1} x^2 \dd{x} = \frac{2}{3} \qquad
+    (1, x) = \int_{-1}^{1} x \dd{x} = 0
+  \end{equation*}
+  以及 $f(x)$ 与基函数的内积:
+  \begin{gather*}
+    (f, 1) = \int_{-1}^{1} e^x \dd{x} = e - \frac{1}{e} \\
+    (f, x) = \int_{-1}^{1} x e^x \dd{x} = \eval{x e^x}_{-1}^{1} - \int_{-1}^{1} e^x \dd{x} = e + \frac{1}{e} - (e - \frac{1}{e}) = \frac{2}{e}
+  \end{gather*}
+  构造法方程组:
+  \begin{equation*}
+    \begin{pmatrix}
+      (1, 1) & (1, x) \\
+      (x, 1) & (x, x)
+    \end{pmatrix}
+    \begin{pmatrix}
+      a_0 \\
+      a_1
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+      (f, 1) \\
+      (f, x)
+    \end{pmatrix}
+  \end{equation*}
+  代入已知内积值:
+  \begin{equation*}
+    \begin{pmatrix}
+      2 & 0           \\
+      0 & \frac{2}{3}
+    \end{pmatrix}
+    \begin{pmatrix}
+      a_0 \\
+      a_1
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+      e - \frac{1}{e} \\
+      \frac{2}{e}
+    \end{pmatrix}
+  \end{equation*}
+  解这个方程组:
+  \begin{gather*}
+    2a_0 = e - \frac{1}{e} \implies a_0 = \frac{e - e^{-1}}{2} \\
+    \frac{2}{3}a_1 = \frac{2}{e} \implies a_1 = \frac{3}{e}
+  \end{gather*}
+  因此, $\mathscr{P}_1$ 中的最佳平方逼近多项式为:
+  \begin{equation*}
+    P_1^*(x) = \frac{e - e^{-1}}{2} + 3x
+  \end{equation*}
+
+  \paragraph{在 $\mathscr{P}_2$ 中的最佳平方逼近多项式 $P_2^*$}
+  在 $\mathscr{P}_2$ 中, 多项式形式为 $P_2^*(x) = a_0 + a_1 x + a_2 x^2$.
+  我们需要最小化误差平方和:
+  \begin{equation*}
+    E = \int_{-1}^{1} [e^x - (a_0 + a_1 x + a_2 x^2)]^2 \dd{x}
+  \end{equation*}
+  通过最小化 $E$, 我们可以得到 $a_0$、$a_1$ 和 $a_2$ 的值.
+  首先, 计算内积:
+  \begin{align*}
+    (1, 1)     & = 2                                      &
+    (x, x)     & = \frac{2}{3}                            &
+    (x^2, x^2) & = \int_{-1}^{1} x^4 \dd{x} = \frac{2}{5}   \\
+    (1, x)     & = 0                                      &
+    (1, x^2)   & = \int_{-1}^{1} x^2 \dd{x} = \frac{2}{3} &
+    (x, x^2)   & = \int_{-1}^{1} x^3 \dd{x} = 0
+  \end{align*}
+  以及 $f(x)$ 与基函数的内积:
+  \begin{equation*}
+    (f, 1) = e - \frac{1}{e}, \qquad
+    (f, x) = \frac{2}{e},     \qquad
+    (f, x^2) = \int_{-1}^{1} x^2 e^x \dd{x}
+  \end{equation*}
+  使用分部积分法计算 $(f, x^2)$:
+  \begin{equation*}
+    \begin{split}
+      (f, x^2)
+       & = \eval{x^2 e^x}_{-1}^{1} - \int_{-1}^{1} 2x e^x \dd{x} \\
+       & = e - \frac{1}{e} - 2 \cdot \frac{2}{e}                 \\
+       & = e - \frac{5}{e}
+    \end{split}
+  \end{equation*}
+  构造法方程组:
+  \begin{equation*}
+    \begin{pmatrix}
+      2           & 0           & \frac{2}{3} \\
+      0           & \frac{2}{3} & 0           \\
+      \frac{2}{3} & 0           & \frac{2}{5}
+    \end{pmatrix}
+    \begin{pmatrix}
+      a_0 \\
+      a_1 \\
+      a_2
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+      e - \frac{1}{e} \\
+      \frac{2}{e}     \\
+      e - \frac{5}{e}
+    \end{pmatrix}
+  \end{equation*}
+  通过解这个线性方程组, 我们可以得到 $a_0, a_1, a_2$ 的值:
+  \begin{equation*}
+    a_0 = - \frac{3}{4} e + \frac{33}{4} e^{-1}, \qquad
+    a_1 = \frac{3}{e},                           \qquad
+    a_2 = \frac{15}{4} e - \frac{105}{4} e^{-1}
+  \end{equation*}
+  最终, $\mathscr{P}_2$ 中的最佳平方逼近多项式为:
+  \begin{equation*}
+    P_2^*(x) = a_0 + a_1 x + a_2 x^2
+  \end{equation*}
+  其中 $a_0, a_1, a_2$ 的值如上.
+\end{sol}
+
+\begin{prob}
+  求 $x^2$ 在区间 $[0, 1]$ 上的最佳一次一致逼近多项式
+\end{prob}
+\begin{sol}
+  假设函数 $g$ 是函数 $f$ 的最佳一次逼近多项式.
+  则 $f - g$ 的内部极值点是唯一的;
+  设 $\{ 0, x^*, 1 \}$ 是一个交错点组, $g(x) = c x + d$.
+  则
+  \begin{equation*}
+    f(1) - f(0) = c (1 - 0)
+    \implies c = 1
+  \end{equation*}
+  由于 $x^*$ 是极值点, 于是
+  \begin{equation*}
+    f'(x^*) - c = 0
+    \implies x^* = \frac{1}{2}
+  \end{equation*}
+  再由
+  \begin{equation*}
+    f(0) - g(0) = -[f(x^*) - g(x^*)]
+    \implies d = -\frac{1}{8}
+  \end{equation*}
+  因此, $g(x) = x - \frac{1}{8}$.
+\end{sol}
+
+\begin{prob}[\booktitle P340 3.]
+  用梯形公式和 Simpson 公式计算下列积分并估计其误差
+  \begin{enumerate}
+    \item $\displaystyle \int_1^2 \ln{x} \dd{x}$
+  \end{enumerate}
+\end{prob}
+\begin{sol}
+  \DeclareDocumentCommand{\f}{}{\trigbraces{f}}
+  我们将使用梯形公式和 Simpson 公式来计算积分 $\int_1^2 \ln{x} \dd{x}$, 并估计其误差.
+
+  \paragraph{梯形公式}
+  梯形公式的形式为:
+  \begin{equation*}
+    \int_a^b f(x) \dd{x} \approx \frac{b-a}{2} [f(a) + f(b)]
+  \end{equation*}
+  对于 $\int_1^2 \ln{x} \dd{x}$, 我们有 $a = 1$, $b = 2$, $f(x) = \ln{x}$.
+  计算 $f(a)$ 和 $f(b)$:
+  \begin{equation*}
+    f(1) = \ln{1} = 0, \qquad
+    f(2) = \ln{2}
+  \end{equation*}
+  代入梯形公式:
+  \begin{equation*}
+    \int_1^2 \ln{x} \dd{x}
+    \approx \frac{2-1}{2} [0 + \ln{2}]
+    = \frac{1}{2} \ln{2}
+  \end{equation*}
+
+  \paragraph{梯形公式的误差估计}
+  梯形公式的误差估计公式为:
+  \begin{equation*}
+    E_T = -\frac{(b-a)^3}{12} f''(\xi)
+  \end{equation*}
+  其中 $\xi \in [a, b]$.
+  计算 $f''(x)$:
+  \begin{equation*}
+    f(x) = \ln{x}
+    \implies f'(x) = \frac{1}{x}
+    \implies f''(x) = -\frac{1}{x^2}
+  \end{equation*}
+  在区间 $[1, 2]$ 上, $f''(x)$ 的最大值出现在 $x = 1$:
+  \begin{equation*}
+    f''(1) = -1
+  \end{equation*}
+  代入误差估计公式:
+  \begin{equation*}
+    E_T = -\frac{(2-1)^3}{12} (-1) = \frac{1}{12}
+  \end{equation*}
+
+  \paragraph{Simpson 公式}
+  Simpson 公式的形式为:
+  \begin{equation*}
+    \int_a^b f(x) \dd{x} \approx \frac{b-a}{6} \bqty{f(a) + 4\f(\frac{a+b}{2}) + f(b)}
+  \end{equation*}
+  对于 $\int_1^2 \ln{x} \dd{x}$, 我们有 $a = 1$, $b = 2$, $f(x) = \ln{x}$.
+  计算 $\f(\frac{a+b}{2})$:
+  \begin{equation*}
+    \frac{a+b}{2} = \frac{1+2}{2} = 1.5, \qquad
+    f(1.5) = \ln{1.5}
+  \end{equation*}
+  代入 Simpson 公式:
+  \begin{equation*}
+    \int_1^2 \ln{x} \dd{x}
+    \approx \frac{2-1}{6} (0 + 4 \ln{1.5} + \ln{2})
+    = \frac{1}{6} (4 \ln{1.5} + \ln{2})
+  \end{equation*}
+
+  \paragraph{Simpson 公式的误差估计}
+  Simpson 公式的误差估计公式为:
+  \begin{equation*}
+    E_S = -\frac{(b-a)^5}{2880} f^{(4)}(\xi)
+  \end{equation*}
+  其中 $\xi \in [a, b]$.
+  计算 $f^{(4)}(x)$:
+  \begin{equation*}
+    f(x) = \ln{x}
+    \implies f'(x) = \frac{1}{x}
+    \implies f''(x) = -\frac{1}{x^2}
+    \implies f'''(x) = \frac{2}{x^3}
+    \implies f^{(4)}(x) = -\frac{6}{x^4}
+  \end{equation*}
+  在区间 $[1, 2]$ 上, $f^{(4)}(x)$ 的最大值出现在 $x = 1$:
+  \begin{equation*}
+    f^{(4)}(1) = -6
+  \end{equation*}
+  代入误差估计公式:
+  \begin{equation*}
+    E_S = -\frac{(2-1)^5}{2880} (-6) = \frac{6}{2880} = \frac{1}{480}
+  \end{equation*}
+
+  \paragraph{最终结果}
+  梯形公式计算结果:
+  \begin{equation*}
+    \int_1^2 \ln{x} \dd{x} \approx \frac{1}{2} \ln{2}
+  \end{equation*}
+  误差估计:
+  \begin{equation*}
+    E_T \approx \frac{1}{12}
+  \end{equation*}
+  Simpson 公式计算结果:
+  \begin{equation*}
+    \int_1^2 \ln{x} \dd{x} \approx \frac{1}{6} (4 \ln{1.5} + \ln{2})
+  \end{equation*}
+  误差估计:
+  \begin{equation*}
+    E_S \approx \frac{1}{480}
+  \end{equation*}
+  因此, 梯形公式和 Simpson 公式的计算结果及其误差估计分别为:
+  \begin{equation*}
+    \boxed{\frac{1}{2} \ln{2}} \qq{和} \boxed{\frac{1}{6} (4 \ln{1.5} + \ln{2})}
+  \end{equation*}
+  误差估计分别为:
+  \begin{equation*}
+    \boxed{\frac{1}{12}} \qq{和} \boxed{\frac{1}{480}}
+  \end{equation*}
+\end{sol}
+
+\begin{prob}[\booktitle P340 8.]
+  确定求积公式
+  \begin{equation*}
+    \int_0^1 \sqrt{x} f(x) \dd{x} \approx A_0 f(x_0) + A_1 f(x_1)
+  \end{equation*}
+  的节点 $x_0, x_1$ 和系数 $A_0, A_1$ 使该求积公式具有 3 次代数精度
+\end{prob}
+\begin{sol}
+  \DeclareDocumentCommand{\f}{}{\trigbraces{f}}
+  为了确定求积公式
+  \begin{equation*}
+    \int_0^1 \sqrt{x} f(x) \dd{x} \approx A_0 f(x_0) + A_1 f(x_1)
+  \end{equation*}
+  的节点 $x_0, x_1$ 和系数 $A_0, A_1$ 使其具有 3 次代数精度, 我们可以按照以下步骤进行:
+
+  \paragraph{第一步: 求正交多项式 $\varphi_n$}
+  我们需要找到在区间 $[0, 1]$ 上关于权函数 $\sqrt{x}$ 的正交多项式.
+  首先, 考虑一般的正交多项式形式:
+  \begin{equation*}
+    \varphi_n(x) = x^n + \text{低次项}
+  \end{equation*}
+  对于 $n = 2$, 我们需要找到 $\varphi_2(x)$ 使得:
+  \begin{equation*}
+    \int_0^1 \sqrt{x} \varphi_2(x) x^k \dd{x} = 0 \qq{对于} k = 0, 1
+  \end{equation*}
+  设 $\varphi_2(x) = x^2 + ax + b$, 则:
+  \begin{equation*}
+    \int_0^1 \sqrt{x} (x^2 + ax + b) x^k \dd{x} = 0 \qq{对于} k = 0, 1
+  \end{equation*}
+  计算这些积分:
+  \begin{gather*}
+    \int_0^1 \sqrt{x} (x^2 + a x + b) x^0 \dd{x} = \frac{2}{7} + \frac{2}{5} a + \frac{2}{3} b = 0 \\
+    \int_0^1 \sqrt{x} (x^2 + a x + b) x^1 \dd{x} = \frac{2}{9} + \frac{2}{7} a + \frac{2}{5} b = 0
+  \end{gather*}
+  因此, 我们有:
+  \begin{equation*}
+    a = -\frac{10}{9}, \qquad b = \frac{5}{21}
+  \end{equation*}
+  所以, 正交多项式为:
+  \begin{equation*}
+    \varphi_2(x) = x^2 - \frac{10}{9} x + \frac{5}{21}
+  \end{equation*}
+
+  \paragraph{第二步: 求正交多项式的根 $x_0, x_1$}
+  解方程 $\varphi_2(x) = 0$:
+  \begin{equation*}
+    x_0 = \frac{5}{9} - \frac{2}{9} \sqrt{\frac{10}{7}}, \qquad
+    x_1 = \frac{5}{9} + \frac{2}{9} \sqrt{\frac{10}{7}}
+  \end{equation*}
+
+  \paragraph{第三步: 计算系数 $A_0, A_1$}
+  使用公式 $A_k = \int_0^1 \sqrt{x} l_k(x) \dd{x}$, 其中 $l_k(x)$ 是拉格朗日基函数.
+  对于 $x_0 = \frac{5}{9} - \frac{2}{9} \sqrt{\frac{10}{7}}$, 拉格朗日基函数为:
+  \begin{equation*}
+    l_0(x)
+    = \frac{x - x_1}{x_0 - x_1}
+    = - \frac{9}{4} \sqrt{\frac{7}{10}} x + \frac{1}{4} \sqrt{\frac{35}{2}} + \frac{1}{2}
+  \end{equation*}
+  对于 $x_1 = \frac{5}{9} + \frac{2}{9} \sqrt{\frac{10}{7}}$, 拉格朗日基函数为:
+  \begin{equation*}
+    l_1(x)
+    = \frac{x - x_0}{x_1 - x_0}
+    = \frac{9}{4} \sqrt{\frac{7}{10}} x - \frac{1}{4} \sqrt{\frac{35}{2}} + \frac{1}{2}
+  \end{equation*}
+  计算 $A_0$ 和 $A_1$:
+  \begin{equation*}
+    \begin{split}
+      A_0
+       & = \int_0^1 \sqrt{x} l_0(x) \dd{x}                                                              \\
+       & = \eval{\frac{x^{\frac{3}{2}}}{300} \pqty{25 \pqty{4 + \sqrt{70}} - 27 \sqrt{70} x}}_{x = 0}^1 \\
+       & = \frac{50 - \sqrt{70}}{150}
+      \approx \num{0.27756}
+    \end{split}
+  \end{equation*}
+  \begin{equation*}
+    \begin{split}
+      A_1
+       & = \int_0^1 \sqrt{x} l_1(x) \dd{x}                                                              \\
+       & = \eval{\frac{x^{\frac{3}{2}}}{300} \pqty{27 \sqrt{70} x - 25 \pqty{\sqrt{70} - 4}}}_{x = 0}^1 \\
+       & = \frac{50 + \sqrt{70}}{150}
+      \approx \num{0.38911}
+    \end{split}
+  \end{equation*}
+
+  \paragraph{最终求积公式}
+  \begin{equation*}
+    \int_0^1 \sqrt{x} f(x) \dd{x} \approx \frac{50 - \sqrt{70}}{150} \f(\frac{5}{9} - \frac{2}{9} \sqrt{\frac{10}{7}}) + \frac{50 + \sqrt{70}}{150} \f(\frac{5}{9} + \frac{2}{9} \sqrt{\frac{10}{7}})
+  \end{equation*}
+  \begin{equation*}
+    \boxed{\frac{50 - \sqrt{70}}{150} \f(\frac{5}{9} - \frac{2}{9} \sqrt{\frac{10}{7}}) + \frac{50 + \sqrt{70}}{150} \f(\frac{5}{9} + \frac{2}{9} \sqrt{\frac{10}{7}})}
+  \end{equation*}
+\end{sol}
+
+\begin{prob}[\booktitle P340 12.]
+  用 Romberg 求积方法计算下列积分, 列出计算步骤表.
+  给出 $T_3^0$ 作为近似值
+  \begin{enumerate}
+    \item $\displaystyle \int_0^1 x^2 e^{-x} \dd{x}$
+  \end{enumerate}
+\end{prob}
+\begin{sol}
+  \DeclareDocumentCommand{\f}{}{\trigbraces{f}}
+  我们使用 Romberg 积分方法来计算积分
+  \begin{equation*}
+    \int_0^1 x^2 e^{-x} \dd{x}
+  \end{equation*}
+
+  \paragraph{Step 1: 梯形公式的应用}
+  首先, 我们使用梯形公式对积分进行初步估计.
+  对于梯形公式, 积分的近似为
+  \begin{equation*}
+    T_n^0 = \frac{h}{2} \left( f(a) + 2 \sum_{k=1}^{n-1} f(a + kh) + f(b) \right)
+  \end{equation*}
+  这里, 选择 $a = 0$, $b = 1$ 我们需要对不同的步长 $h$ 进行计算. 选择的步长为 $h = 1$, $h = \frac{1}{2}$ 和 $h = \frac{1}{4}$.
+  设定:
+  \begin{itemize}
+    \item $T_1^0$ 对应 $n=1$: 使用 $h=1$
+    \item $T_1^1$ 对应 $n=2$: 使用 $h=\frac{1}{2}$
+    \item $T_1^2$ 对应 $n=4$: 使用 $h=\frac{1}{4}$
+  \end{itemize}
+  函数 $f(x) = x^2 e^{-x}$.
+
+  \paragraph{计算 $T_1^0$}
+  \begin{equation*}
+    T_1^0
+    = \frac{1}{2} \left( f(0) + f(1) \right)
+    = \frac{1}{2} \left( 0 + e^{-1}\right)
+    = \frac{1}{2} e^{-1}
+  \end{equation*}
+
+  \paragraph{计算 $T_1^1$}
+  \begin{equation*}
+    T_1^1
+    = \frac{1}{4} \left( f(0) + 2\f(\frac{1}{2}) + f(1) \right)
+  \end{equation*}
+  其中
+  \begin{equation*}
+    \f(\frac{1}{2}) = \frac{1}{4} e^{-\frac{1}{2}}
+  \end{equation*}
+  因此
+  \begin{equation*}
+    T_1^1
+    = \frac{1}{4} \left( 0 + 2 \cdot \frac{1}{4} e^{-\frac{1}{2}} + e^{-1} \right)
+    = \frac{1}{8} e^{-\frac{1}{2}} + \frac{1}{4} e^{-1}
+  \end{equation*}
+
+  \paragraph{计算 $T_3^0$}
+  \begin{equation*}
+    T_1^2
+    = \frac{1}{8} \left( f(0) + 2\f(\frac{1}{4}) + 2\f(\frac{1}{2}) + 2\f(\frac{3}{4}) + f(1) \right),
+  \end{equation*}
+  使用相应的函数值计算每个的贡献并代入公式.
+  类似的步骤分别计算每个附属值:
+  \begin{equation*}
+    \f(\frac{1}{4}) = \frac{1}{16} e^{-\frac{1}{4}}, \qquad
+    \f(\frac{3}{4}) = \frac{9}{16} e^{-\frac{3}{4}}
+  \end{equation*}
+  计算结果如下:
+  \begin{equation*}
+    T_1^2
+    = \frac{1}{8} \left( 2 \cdot \frac{1}{16} e^{-\frac{1}{4}} + 2 \cdot \frac{1}{4} e^{-\frac{1}{2}} + 2 \cdot \frac{9}{16} e^{-\frac{3}{4}} + e^{-1} \right)
+    = \frac{1}{64} e^{-\frac{1}{4}} + \frac{1}{16} e^{-\frac{1}{2}} + \frac{9}{64} e^{-\frac{3}{4}} + \frac{1}{8} e^{-1}
+  \end{equation*}
+
+  \paragraph{Step 2: Romberg 外推}
+  接下来我们使用 Romberg 方法通过递推关系
+  \begin{equation*}
+    T_{k + 1}^n = \frac{4^k T_k^n - T_k^{n - 1}}{4^k - 1}
+  \end{equation*}
+  我们需要的值 $T_3^0$:
+  计算过程:
+  \begin{equation*}
+    T_2^0
+    = \frac{4 \cdot T_1^1 - T_1^0}{4 - 1}
+    = \frac{4 \cdot \pqty{\frac{1}{8} e^{-\frac{1}{2}} + \frac{1}{4} e^{-1}} - \frac{1}{2} e^{-1}}{3}
+    = \frac{1}{6} e^{-\frac{1}{2}} + \frac{1}{6} e^{-1}
+  \end{equation*}
+  \begin{equation*}
+    \begin{split}
+      T_2^1
+       & = \frac{4 \cdot T_1^2 - T_1^1}{4 - 1}                                                                                                                                                                    \\
+       & = \frac{4 \cdot \pqty{\frac{1}{64} e^{-\frac{1}{4}} + \frac{1}{16} e^{-\frac{1}{2}} + \frac{9}{64} e^{-\frac{3}{4}} + \frac{1}{8} e^{-1}} - \pqty{\frac{1}{8} e^{-\frac{1}{2}} + \frac{1}{4} e^{-1}}}{3} \\
+       & = \frac{1}{48} e^{-\frac{1}{4}} + \frac{1}{24} e^{-\frac{1}{2}} + \frac{3}{16} e^{-\frac{3}{4}} + \frac{1}{12} e^{-1}
+    \end{split}
+  \end{equation*}
+  \begin{equation*}
+    \begin{split}
+      T_3^0
+       & = \frac{4^2 T_2^1 - T_2^0}{4^2 - 1}                                                                                                                                                                         \\
+       & = \frac{16 \cdot \pqty{\frac{1}{48} e^{-\frac{1}{4}} + \frac{1}{24} e^{-\frac{1}{2}} + \frac{3}{16} e^{-\frac{3}{4}} + \frac{1}{12} e^{-1}} - \pqty{\frac{1}{6} e^{-\frac{1}{2}} + \frac{1}{6} e^{-1}}}{15} \\
+       & = \frac{1}{45} e^{-\frac{1}{4}} + \frac{1}{30} e^{-\frac{1}{2}} + \frac{1}{5} e^{-\frac{3}{4}} + \frac{7}{90} e^{-1}
+      \approx \num{0.1606105287}
+    \end{split}
+  \end{equation*}
+  因此, 经过外推, 我们获得 $T_3^0$ 的准确近似.
+\end{sol}
+
+\end{document}
