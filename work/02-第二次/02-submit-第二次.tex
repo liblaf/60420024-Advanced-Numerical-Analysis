@@ -1,0 +1,234 @@
+\documentclass[lang = zh]{iwork}
+
+\title{第二次}
+\course{Advanced Numerical Analysis}
+\institute{School of Software, Tsinghua University}
+\email{li-q24@mails.tsinghua.edu.cn}
+\id{2024312371}
+\class{}
+
+\def\bookname{《数值分析基础 (第二版) (关治, 陆金甫)》}
+
+\begin{document}
+
+\maketitle
+
+\begin{prob}[\bookname P226. 1.]
+  设 $f(x) = e^x, \ x \in [0, 2]$
+  \begin{enumerate}
+    \item $x_0 = 0.0,\,x_1 = 0.5$, 构造一次 Lagrange 插值多项式 $L_1$, 并计算 $L_1(0.25)$.
+    \item $x_0 = 0.5,\,x_1 = 1.0$, 构造一次 Lagrange 插值多项式 $L_1$, 并计算 $L_1(0.75)$.
+    \item $x_0 = 0.0,\,x_1 = 1.0,\,x_2 = 2.0$, 构造二次 Lagrange 插值多项式 $L_2$ 并计算 $L_2(0.25), L2(0.75)$.
+  \end{enumerate}
+\end{prob}
+\begin{sol} ~
+  \begin{enumerate}
+    \item ~ \vspace{-\baselineskip}
+          \begin{align*}
+            L_{10}    & = \frac{x - x_1}{x_0 - x_1}                                                         \\
+            L_{11}    & = \frac{x - x_0}{x_1 - x_0}                                                         \\
+            L_1       & = f(x_0) L_{10}(x) + f(x_1) L_{11}(x)                                               \\
+                      & = e^{0.0} \cdot \frac{x - 0.5}{0.0 - 0.5} + e^{0.5} \cdot \frac{x - 0.0}{0.5 - 0.0} \\
+                      & = 1 + (2 e^{0.5} - 2) x                                                             \\
+            L_1(0.25) & = 1 + (2 e^{0.5} - 2) \cdot 0.25 \approx \num{1.324}
+          \end{align*}
+    \item ~ \vspace{-\baselineskip}
+          \begin{align*}
+            L_1       & = e^{0.5} \cdot \frac{x - 1.0}{0.5 - 1.0} + e^{1.0} \cdot \frac{x - 0.5}{1.0 - 0.5} \\
+                      & = 2 e^{0.5} - e + (2 e - 2 e^{0.5}) x                                               \\
+            L_1(0.75) & = 2 e^{0.5} - e + (2 e - 2 e^{0.5}) \cdot 0.75 \approx \num{2.184}
+          \end{align*}
+    \item ~ \vspace{-\baselineskip}
+          \begin{align*}
+            L_{20} & = \frac{(x - x_1)(x - x_2)}{(x_0 - x_1)(x_0 - x_2)} \\
+            L_{21} & = \frac{(x - x_0)(x - x_2)}{(x_1 - x_0)(x_1 - x_2)} \\
+            L_{22} & = \frac{(x - x_0)(x - x_1)}{(x_2 - x_0)(x_2 - x_1)}
+          \end{align*}
+          \begin{equation*}
+            \begin{split}
+              L_2 & = f(x_0) L_{20}(x) + f(x_1) L_{21}(x) + f(x_2) L_{22}(x)                                                                                      \\
+                  & = e^0 \cdot \frac{(x - 1)(x - 2)}{(0 - 1)(0 - 2)} + e^{0.5} \cdot \frac{x(x - 2)}{(1 - 0)(1 - 2)} + e^1 \cdot \frac{x(x - 1)}{(2 - 0)(2 - 1)} \\
+                  & = \frac{1}{2} (x - 1) (x - 2) - e x (x - 2) + \frac{e^2}{2} x (x - 1)                                                                         \\
+            \end{split}
+          \end{equation*}
+          \begin{equation*}
+            L_2(0.25) \approx \num{1.153},\;
+            L_2(0.75) \approx \num{2.012}
+          \end{equation*}
+  \end{enumerate}
+\end{sol}
+
+\begin{prob}[\bookname P226. 4.]
+  设 $l_0, l_1, \cdots, l_n$ 是以节点 $x_0, x_1, \cdots, x_n$ 的 $n$ 次 Lagrange 插值基函数, 试证明
+  \begin{equation*}
+    \sum_{k = 0}^n l_k(0) x_k^j =
+    \begin{cases}
+      0,                         & j = 1, 2, \cdots, n, \\
+      (-1)^n x_0 x_1 \cdots x_n, & j = n + 1.
+    \end{cases}
+  \end{equation*}
+\end{prob}
+\begin{proof}
+  令 $f(x) = x^j$, 则 $n$ 次插值多项式为 $L_n(x) = \sum_{k = 0}^n l_k(x) x_k^j$.
+  当 $j = 1, 2, \cdots, n$ 时, 由插值多项式的性质可知, $\sum_{k = 0}^n l_k(0) x_k^j = L_n(0) = f(0) = 0$.
+  当 $j = n + 1$ 时, 对于 $\bar{x} = 0$, 存在 $\xi \in I[x_0, x_1, \cdots, x_n, 0]$, 使得
+  \begin{equation*}
+    \sum_{k = 0}^n l_k(0) x_k^j
+    = f(0) - L_n(0)
+    = \frac{f^{n + 1}(\xi)}{(n + 1)!} (0 - x_0) \cdots (0 - x_n)
+    = (-1)^n x_0 x_1 \cdots x_n
+  \end{equation*}
+\end{proof}
+
+\begin{prob}[\bookname P226. 5.]
+  设 $f(x) = x^5 + 4 x^3 + 1$, 试求均差 $f[0,1,2],\, f[0,1,2,3,4,5],\, f[0,1,2,3,4,5,6]$.
+\end{prob}
+\begin{sol} ~ \vspace{-\baselineskip}
+  \begin{table}
+    \centering
+    \begin{tabular}{c|ccccccc}
+                & $k = 0$ & 1    & 2    & 3   & 4  & 5 & 6 \\
+      \hline
+      $x_0 = 0$ & 1                                        \\
+      $x_1 = 1$ & 6       & 5                              \\
+      $x_2 = 2$ & 65      & 59   & 27                      \\
+      $x_3 = 3$ & 352     & 287  & 114  & 29               \\
+      $x_4 = 4$ & 1281    & 929  & 321  & 69  & 10         \\
+      $x_5 = 5$ & 3626    & 2345 & 708  & 129 & 15 & 1     \\
+      $x_6 = 6$ & 8641    & 5015 & 1335 & 209 & 20 & 1 & 0
+    \end{tabular}
+  \end{table}
+  \vspace{-2\baselineskip}
+  \begin{gather*}
+    f[0,1,2] = 27      \\
+    f[0,1,2,3,4,5] = 1 \\
+    f[0,1,2,3,4,5,6] = 0
+  \end{gather*}
+\end{sol}
+
+\begin{prob}[\bookname P227. 12.]
+  求次数不高于三次的多项式 $P$ 使其满足 $p(0) = p'(0) = 0,\, p(1) = 1,\, p(2) = 1$, 并写出其 Newton 形式的余项.
+\end{prob}
+\begin{sol} ~ \vspace{-\baselineskip}
+  \begin{table}
+    \centering
+    \begin{tabular}{ccccc}
+      0          & 1 & 2              & 3              \\
+      \midrule
+      $p(0) = 0$ &                                     \\
+      $p(0) = 0$ & 0                                   \\
+      $p(1) = 1$ & 1 & 1                               \\
+      $p(2) = 1$ & 0 & $-\frac{1}{2}$ & $-\frac{3}{4}$ \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  \vspace{-2\baselineskip}
+  \begin{gather*}
+    P(x) = x^2 - \frac{3}{4} x^2 (x - 1) \\
+    R_3(x) = f[0,0,1,2,x] x^2 (x - 1) (x - 2)
+  \end{gather*}
+\end{sol}
+
+\begin{prob}[\bookname P227. 13.]
+  求次数不超过 4 次的多项式 $P$, 使其满足
+  \begin{equation*}
+    p(1) = p(3) = 0,\;
+    p(2) = 1,\;
+    p'(1) = 0,\;
+    p''(1) = 8;
+  \end{equation*}
+  并写出其 Newton 形式的余项.
+\end{prob}
+\begin{sol} ~ \vspace{-\baselineskip}
+  \begin{table}
+    \centering
+    \begin{tabular}{ccccc}
+      0          & 1           & 2            & 3  & 4 \\
+      \midrule
+      $p(1) = 0$ &                                     \\
+      $p(1) = 0$ & $p'(1) = 0$ &                       \\
+      $p(1) = 0$ & $p'(1) = 0$ & $p''(1) = 8$          \\
+      $p(2) = 1$ & 1           & 1            & -7     \\
+      $p(3) = 0$ & -1          & -1           & -1 & 3 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  \vspace{-2\baselineskip}
+  \begin{gather*}
+    P_4(x) = 8 (x - 1)^2 - 7 (x - 1)^3 + 3 (x - 1)^3 (x - 2) \\
+    R_4(x) = f[1,1,1,2,3,x](x - 1)^3 (x - 2) (x - 3)
+  \end{gather*}
+\end{sol}
+
+\begin{prob}[\bookname P227. 14.]
+  设 $f(x) = \frac{1}{a - x}$, 证明
+  \begin{enumerate}
+    \item \label{prob:14.1} $\displaystyle f[x_0,x_1,\cdots,x_n] = \prod_{j = 0}^n \pqty{\frac{1}{a - x_j}}$.
+    \item \label{prob:14.2} $\displaystyle \frac{1}{a - x} = \frac{1}{a - x_0} + \frac{1}{(a - x_0) (a - x_1)} (x - x_0) + \cdots + \frac{1}{(a - x_0) \cdots (a - x_n)} (x - x_0) \cdots (x - x_{n - 1}) + \frac{1}{(a - x_0) \cdots (a - x_n) (a - x)} (x - x_0) \cdots (x - x_n)$.
+  \end{enumerate}
+  (提示: \cref{prob:14.1} 用归纳法; \cref{prob:14.2} Newton 插值多项式)
+\end{prob}
+\begin{proof} ~
+  \begin{enumerate}
+    \item 当 $n = 0$ 时,
+          \begin{equation*}
+            f[x_0] = f(x_0) = \frac{1}{a - x_0}
+          \end{equation*}
+          假设当 $n = k$ 时, $f[x_0,x_1,\cdots,x_k] = \prod_{j = 0}^k \pqty{\frac{1}{a - x_j}}$ 成立, 则当 $n = k + 1$ 时,
+          \begin{equation*}
+            \begin{split}
+              f[x_0,x_1,\cdots,x_{k + 1}]
+               & = \frac{f[x_1,\cdots,x_{k + 1}] - f[x_0,\cdots,x_k]}{x_{k + 1} - x_0}                                                        \\
+               & = \frac{1}{x_{k + 1} - x_0} \pqty{\prod_{j = 1}^{k + 1} \pqty{\frac{1}{a - x_k}} - \prod_{j = 0}^k \pqty{\frac{1}{a - x_k}}} \\
+               & = \frac{1}{x_{k + 1} - x_0} \pqty{\frac{1}{a - x_{k + 1}} - \frac{1}{a - x_0}} \prod_{j = 1}^k \pqty{\frac{1}{a - x_k}}      \\
+               & = \prod_{j = 0}^{k + 1} \pqty{\frac{1}{a - x_k}}
+            \end{split}
+          \end{equation*}
+          由数学归纳法可知, $\forall n \in \mathbb{N}$, $f[x_0,x_1,\cdots,x_n] = \prod_{j = 0}^n \pqty{\frac{1}{a - x_j}}$.
+    \item Newton 插值多项式为
+          \begin{equation*}
+            \begin{split}
+              P_n(x)
+               & = f[x_0] + f[x_0,x_1] (x - x_0) + \cdots + f[x_0,x_1,\cdots,x_n] (x - x_0) \cdots (x - x_{n - 1})                                              \\
+               & = \frac{1}{a - x_0} + \frac{1}{(a - x_0) (a - x_1)} (x - x_0) + \cdots + \frac{1}{(a - x_0) \cdots (a - x_n)} (x - x_0) \cdots (x - x_{n - 1})
+            \end{split}
+          \end{equation*}
+          余项为
+          \begin{equation*}
+            R_n(x) = f[x_0,x_1,\cdots,x_n,x] (x - x_0) \cdots (x - x_n)
+          \end{equation*}
+          由 \cref{prob:14.1} 可知, $f[x_0,x_1,\cdots,x_n,x] = \prod_{j = 0}^n \pqty{\frac{1}{a - x_j}} \cdot \frac{1}{a - x} = \frac{1}{(a - x_0) \cdots (a - x_n) (a - x)}$.
+          故
+          \begin{equation*}
+            R_n(x) = \frac{1}{(a - x_0) \cdots (a - x_n) (a - x)} (x - x_0) \cdots (x - x_n)
+          \end{equation*}
+          由 $f(x) = \frac{1}{a - x}$ 可知, $\frac{1}{a - x} = P_n(x) + R_n(x)$.
+  \end{enumerate}
+\end{proof}
+
+\begin{prob}[\bookname P227. 15.]
+  设 $f(x) = a_0 + a_1 x + \cdots + a_{n - 1} x^{n - 1} + a_n x^n$ 有 $n$ 个不同的实根 $x_1, x_2, \cdots, x_n$, 试证明
+  \begin{equation*}
+    \sum_{j = 1}^n \frac{x_j^k}{f'(x_j)} =
+    \begin{cases}
+      0,        & 0 \leqslant k \leqslant n - 2, \\
+      a_n^{-1}, & k = n - 1.
+    \end{cases}
+  \end{equation*}
+\end{prob}
+\begin{proof}
+  不妨设 $f(x) = a_n (x - x_1) (x - x_2) \cdots (x - x_n)$.
+  令 $P(x) = x^k$, $w_n(x) = (x - x_1) (x - x_2) \cdots (x - x_n)$.
+  则存在 $\xi \in I(x_0, x_1, \cdots, x_n)$, 使得
+  \begin{equation*}
+    P[x_1,x_2,\cdots,x_n]
+    = \frac{P^{(n)}(\xi)}{n!}
+    = P[x_1,x_2,\cdots,x_n]
+    = \sum_{j = 1}^n \frac{P(x_j)}{w_n'(x_j)}
+    = \frac{1}{a_n} \sum_{j = 1}^n \frac{x_j^k}{f'(x_j)}
+  \end{equation*}
+  当 $0 \leqslant k \leqslant n - 2$ 时, $P^{(n)}(\xi) = 0$, $\sum_{j = 1}^n \frac{x_j^k}{f'(x_j)} = 0$. \\
+  当 $k = n - 1$ 时, $P^{(n)}(\xi) = n!$, $\sum_{j = 1}^n \frac{x_j^k}{f'(x_j)} = a_n^{-1}$.
+\end{proof}
+
+\end{document}

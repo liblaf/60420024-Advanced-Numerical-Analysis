@@ -1,0 +1,230 @@
+\documentclass[lang = zh]{iwork}
+
+\title{第一次}
+\course{Advanced Numerical Analysis}
+\institute{School of Software, Tsinghua University}
+\email{li-q24@mails.tsinghua.edu.cn}
+\id{2024312371}
+\class{}
+\def\bookname{《数值分析基础 (第二版) (关治, 陆金甫)》}
+
+\begin{document}
+
+\maketitle
+
+% \begin{prob}[\bookname Page 33. 5.]
+%   下列公式要怎样变换才能使数值计算时能避免有效数字的损失?
+%   \begin{enumerate}
+%     \item $\int_N^{N + 1} \frac{1}{1 + x^2} \dd{x} = \arctan(N + 1) - \arctan(N) \qc N >> 1$;
+%     \item $\sqrt{x + \frac{1}{x}} - \sqrt{x - \frac{1}{x}} \qc \abs{x} >> 1$;
+%     \item $\ln(x + 1) - \ln(x) \qc x >> 1$;
+%     \item $\cos^2{x} - \sin^2{x}$, $x \approx \frac{\pi}{4}$.
+%   \end{enumerate}
+% \end{prob}
+% \begin{sol} ~
+%   \begin{enumerate}
+%     \item $N >> 1$ 时, $\arctan(N + 1)$ 与 $\arctan(N)$ 相近
+%           \begin{equation*}
+%             \begin{split}
+%               \int_N^{N + 1} \frac{1}{1 + x^2} \dd{x}
+%               = \arctan(N + 1) - \arctan(N)
+%               % = \arctan(\frac{(N + 1) - N}{1 + (N + 1) N})
+%               = \arctan(\frac{1}{1 + N (N + 1)})
+%             \end{split}
+%           \end{equation*}
+%     \item $\abs{x} >> 1$ 时, $\sqrt{x + \frac{1}{x}}$ 与 $\sqrt{x - \frac{1}{x}}$ 相近, $\abs{x} >> \abs{\frac{1}{x}}$
+%           \begin{equation*}
+%             \begin{split}
+%               \sqrt{x + \frac{1}{x}} - \sqrt{x - \frac{1}{x}}
+%               = \frac{\pqty{x + \frac{1}{x}} - \pqty{x - \frac{1}{x}}}{\sqrt{x + \frac{1}{x}} + \sqrt{x - \frac{1}{x}}}
+%               = \frac{1}{2 \pqty{\sqrt{x + \frac{1}{x}} + \sqrt{x - \frac{1}{x}}}}
+%             \end{split}
+%           \end{equation*}
+%     \item $x >> 1$ 时, $\ln(x + 1)$ 与 $\ln(x)$ 相近
+%           \begin{equation*}
+%             \begin{split}
+%               \ln(x + 1) - \ln(x)
+%               = \ln(\frac{x + 1}{x})
+%               = \ln(1 + \frac{1}{x})
+%             \end{split}
+%           \end{equation*}
+%     \item $x \approx \frac{\pi}{4}$ 时, $\cos^2{x} \approx \sin^2{x}$
+%           \begin{equation*}
+%             \cos^2{x} - \sin^2{x}
+%             = \cos{2x}
+%           \end{equation*}
+%   \end{enumerate}
+% \end{sol}
+
+\begin{prob}[\bookname Page 33 习题 8]
+  已知 $x_0, x_1, x_2, \cdots, x_m \in [a, b]$, 下面的 $(f, g)$ 是否能构成 $C[a, b]$ 上的内积?
+  证明你的结论.
+  \begin{enumerate}
+    \item $(f, g) = \int_a^b f(x) g(x) \dd{x} \qc \forall f, g \in C[a, b]$
+    \item $\displaystyle (f, g) = \sum_{i = 0}^m f(x_i) g(x_i) \qc \forall f, g \in C[a, b]$
+  \end{enumerate}
+\end{prob}
+\begin{proof} ~
+  \begin{enumerate}
+    \item $(f, g)$ 构成 $C[a, b]$ 上的内积. 按内积定义验证:
+          \begin{align*}
+            (f, f) & = \int_a^b f^2(x) \dd{x} \geqslant 0 \qq*{.} (f, f) = 0 \leftrightarrow f = 0                     \\
+            (f, g) & = \int_a^b f(x) g(x) \dd{x} = \int_a^b \overline{g(x)} \overline{f(x)} \dd{x} = \overline{(g, f)} \\
+            (c f + d g, h)
+                   & = \int_a^b (c f(x) + d g(x)) h(x) \dd{x}
+            = c \int_a^b f(x) h(x) \dd{x} + d \int_a^b g(x) h(x) \dd{x}
+            = c (f, h) + d (g, h)
+          \end{align*}
+    \item $(f, g)$ 不构成 $C[a, b]$ 上的内积. 反例: 取 $a = -1$, $b = 1$, $x_0 = 0 \in [a, b]$, $f(x) = \sin{x}$, 则
+          \begin{equation*}
+            (f, f) = \sum_{i = 0}^m f(x_i)^2 = 0 \qq{但} f \neq 0
+          \end{equation*}
+  \end{enumerate}
+\end{proof}
+
+\begin{prob}[\bookname Page 33. 习题 10]
+  已知 $f(x) = \sin{x},\ x \in [0, 2 \pi]$. 试求 $C[0, 2 \pi]$ 上函数的范数 $\norm{f}_{\infty}$ 和 $\norm{f}_2$.
+\end{prob}
+\begin{sol}
+  \begin{align*}
+    \norm{f}_{\infty} & = \max_{x \in [0, 2 \pi]} \abs{f(x)} = 1           \\
+    \norm{f}_2        & = \sqrt{\int_0^{2 \pi} f^2(x) \dd{x}} = \sqrt{\pi}
+  \end{align*}
+\end{sol}
+
+\begin{prob}[\bookname Page 33. 习题 12]
+  证明
+  \begin{enumerate}
+    \item $\norm{x}_{\infty} \leqslant \norm{x}_1 \leqslant n \norm{x}_{\infty}$, $\forall x \in \mathbb{R}^n$,
+    \item $\norm{x}_{\infty} \leqslant \norm{x}_2 \leqslant \sqrt{n} \norm{x}_{\infty}$, $\forall x \in \mathbb{R}^n$,
+    \item $\norm{A}_2 \leqslant \norm{A}_F \leqslant \sqrt{n} \norm{A}_2$, $\forall A \in \mathbb{R}^{n \times n}$.
+  \end{enumerate}
+\end{prob}
+\begin{proof} ~
+  \begin{enumerate}
+    \item
+          \begin{equation*}
+            \norm{x}_{\infty}
+            = \max_{1 \leqslant i \leqslant n} \abs{x_i}
+            \leqslant \sum_{i = 1}^n \abs{x_i}
+            = \norm{x}_1
+            \leqslant n \max_{1 \leqslant i \leqslant n} \abs{x_i}
+            = n \norm{x}_{\infty}
+          \end{equation*}
+    \item
+          \begin{equation*}
+            \norm{x}_{\infty}
+            = \max_{1 \leqslant i \leqslant n} \abs{x_i}
+            = \sqrt{\max_{1 \leqslant i \leqslant n} x_i^2}
+            \leqslant \sqrt{\sum_{i = 1}^n x_i^2}
+            = \norm{x}_2
+            \leqslant \sqrt{n \max_{1 \leqslant i \leqslant n} x_i^2}
+            = \sqrt{n} \norm{x}_{\infty}
+          \end{equation*}
+    \item
+          \begin{equation*}
+            \begin{split}
+              \norm{A}_2
+               & = \max_{\norm{x}_2 = 1} \norm{A x}_2
+              = \max_{\norm{x}_2 = 1} \sqrt{\sum_i \abs{\sum_j A_{ij} x_j}^2}                      \\
+               & \leqslant \max_{\norm{x}_2 = 1} \sqrt{\sum_i \pqty{\sum_j A_{ij}^2 \sum_j x_j^2}}
+              = \max_{\norm{x}_2 = 1} \norm{A}_F \norm{x}_2
+              = \norm{A}_F                                                                         \\
+               & \leqslant \max_{\norm{x}_2 = 1} \sqrt{n \sum_i \abs{\sum_j A_{ij} x_j}^2}
+              = n \norm{A}_2
+            \end{split}
+          \end{equation*}
+          % TODO
+  \end{enumerate}
+\end{proof}
+
+\begin{prob}[\bookname Page 34. 习题 15]
+  $A \in \mathbb{R}^{n \times n}$, 设 $A$ 对称正定, 记
+  \begin{equation*}
+    \norm{x}_A = \sqrt{(A x, x)} \qc \forall x \in \mathbb{R}^n
+  \end{equation*}
+  证明 $\norm{x}_A$ 为 $\mathbb{R}^n$ 上的一种向量范数.
+\end{prob}
+\begin{proof} ~
+  \begin{itemize}
+    \item
+          \begin{equation*}
+            \norm{x}_A = \sqrt{(A x, x)} = \sqrt{x^T A x}
+          \end{equation*}
+          由 $A$ 对称正定可知, $\norm{x}_A \geqslant 0$. $\norm{x}_A = 0 \leftrightarrow x = 0$
+    \item
+          \begin{equation*}
+            \norm{\alpha x}_A
+            = \sqrt{(\alpha A x, \alpha x)}
+            = \sqrt{\alpha^2 (A x, x)}
+            = \abs{\alpha} \sqrt{(A x, x)}
+            = \abs{\alpha} \norm{x}_A
+          \end{equation*}
+    \item 由 $A$ 对称正定, 不妨设 $A = B^T B$, 则
+          \begin{equation*}
+            \begin{split}
+              \norm{x + y}_A
+               & = \sqrt{(A (x + y), x + y)}
+              = \sqrt{(B (x + y), B (x + y))}                    \\
+               & \leqslant \sqrt{(B x, B x)} + \sqrt{(B y, B y)}
+              = \sqrt{(A x, x)} + \sqrt{(A y, y)}
+              = \norm{x}_A + \norm{y}_A
+            \end{split}
+          \end{equation*}
+  \end{itemize}
+  综上可知 $\norm{x}_A$ 为 $\mathbb{R}^n$ 上的一种向量范数.
+\end{proof}
+
+\begin{prob}[\bookname Page 34. 习题 19]
+  证明:
+  \begin{enumerate}
+    \item 两个下三角矩阵的乘积是下三角矩阵;
+    \item 单位下三角矩阵的逆矩阵是单位下三角矩阵.
+  \end{enumerate}
+\end{prob}
+\begin{proof} ~
+  \begin{enumerate}
+    \item 设 $A, B$ 为两个下三角矩阵, 则 $A B = C$, 其中
+          \begin{equation*}
+            C_{ij}
+            = \sum_{k = 1}^n A_{ik} B_{kj}
+            = \sum_{j \leqslant k \leqslant i} A_{ik} B_{kj}
+          \end{equation*}
+          当 $i < j$ 时, $C_{ij} = 0$, 故 $A B$ 为下三角矩阵.
+    \item 不妨设单位下三角矩阵 $L = L_1(l_1) L_2(l_2) \cdots L_{n - 1} l(_{n - 1})$, 则
+          \begin{equation*}
+            \begin{split}
+              L^{-1}
+               & = \bqty{L_1(l_1) L_2(l_2) \cdots L_{n - 1} l(_{n - 1})}^{-1}   \\
+               & = L_{n - 1}(l_{n - 1})^{-1} \cdots L_2(l_2)^{-1} L_1(l_1)^{-1} \\
+               & = L_{n - 1}(-l_{n - 1}) \cdots L_2(-l_2) L_1(-l_1)
+            \end{split}
+          \end{equation*}
+          为单位下三角矩阵.
+  \end{enumerate}
+\end{proof}
+
+\begin{prob}[\bookname Page 34. 习题 22]
+  $A \in \mathbb{R}^{n \times n}$, 设 $A$ 严格对角占优, 试证:
+  \begin{equation*}
+    \norm{A^{-1}}_{\infty} \leqslant \bqty{\min_{1 \leqslant i \leqslant n} \pqty{\abs{a}_{ii} - \sum_{j \neq i} \abs{a_{ij}}}}^{-1}
+  \end{equation*}
+\end{prob}
+\begin{proof}
+  $\forall x \in \mathbb{R}^{n}$, 设 $y = A^{-1} x$.
+  不妨设 $\norm{y}_{\infty} = \abs{y_k}$, 则
+  \begin{equation*}
+    \norm{A y}_{\infty}
+    = \max_i \abs{\sum_j a_{ij} y_j}
+    \geqslant \abs{\sum_j a_{kj} y_j}
+    \geqslant \pqty{\abs{a_{kk}} - \sum_{j \neq k} \abs{a_{kj}}} \norm{y}_{\infty}
+    \geqslant \norm{y}_{\infty} \min_i \pqty{\abs{a_{ii}} - \sum_{j \neq i} \abs{a_{ij}}}
+  \end{equation*}
+  即
+  \begin{gather*}
+    \norm{x}_{\infty} \geqslant \norm{A^{-1} x}_{\infty} \min_i\pqty{\abs{a_{ii}} - \sum_{j \neq i} \abs{a_{ij}}} \\
+    \norm{A^{-1}}_{\infty} \leqslant \bqty{\min_{1 \leqslant i \leqslant n} \pqty{\abs{a}_{ii} - \sum_{j \neq i} \abs{a_{ij}}}}^{-1}
+  \end{gather*}
+\end{proof}
+
+\end{document}
